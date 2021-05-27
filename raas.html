@@ -1,0 +1,246 @@
+<!--
+  Copyright 2018 Atsushi Kojo.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type="text/x-red" data-template-name="raas">
+  <div class="form-row input-wsUrl-row">
+    <label for="node-config-input-wsUrl"><i class="fa fa-bookmark"></i> <span data-i18n="raas.label.wsUrl"></span></label>
+    <input type="text" id="node-config-input-wsUrl">
+  </div>
+  <div class="form-row input-contractAddr-row">
+    <label for="node-config-input-contractAddr"><i class="fa fa-bookmark"></i> <span data-i18n="raas.label.contractAddr"></span></label>
+    <input type="text" id="node-config-input-contractAddr" />
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-name"><i class="fa fa-bookmark"></i> <span data-i18n="raas.label.name"></span></label>
+    <input type="text" id="node-config-input-name" data-i18n="[placeholder]raas.placeholder.name" />
+  </div>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('raas', {
+    category: 'config',
+    color: "#48ace4",
+    defaults: {
+      name: { value: '', required: true }
+    },
+    credentials: {
+      wsUrl: { type: 'text', required: true },
+      contractAddr: { type: 'text', required: true }
+    },
+    label: function() {
+      return this.name
+    }
+  });
+</script>
+
+<script type="text/x-red" data-template-name="raas in">
+  <div class="form-tips" id="connect-tips" style="margin-bottom: 12px"></div>
+  <div class="form-row">
+    <label for="node-input-raas"><i class="fa fa-wrench"></i> API </label>
+    <input type="text" id="node-input-raas">
+  </div>
+  <div class="form-row">
+    <label for="node-input-operation"><i class="fa fa-wrench"></i> <span data-i18n="raas_in.label.operation"></span></label>
+    <select type="text" id="node-input-operation">
+      <option value="issuance" data-i18n="raas_in.operation.issuance"></option>
+      <option value="authority" data-i18n="raas_in.operation.authority"></option>
+      <option value="givepoints" data-i18n="raas_in.operation.givepoints"></option>
+      <option value="spendpoints" data-i18n="raas_in.operation.spendpoints"></option>
+      <option value="ownerpoints" data-i18n="raas_in.operation.ownerpoints"></option>
+      <option value="storepoints" data-i18n="raas_in.operation.storepoints"></option>
+      <option value="stupoints" data-i18n="raas_in.operation.stupoints"></option>
+      <option value="userpoints" data-i18n="raas_in.operation.userpoints"></option>
+    </select>
+  </div>
+  <div class="form-row input-owner-row">
+    <label for="node-input-owner"><i class="fa fa-user"></i> <span data-i18n="raas_in.label.owner"></span></label>
+    <select type="text" id="node-input-owner">
+    </select>
+  </div>
+  <div class="form-row input-store-row">
+    <label for="node-input-store"><i class="fa fa-user"></i> <span data-i18n="raas_in.label.store"></span></label>
+    <select type="text" id="node-input-store">
+    </select>
+  </div>
+  <div class="form-row input-user-row">
+    <label for="node-input-user"><i class="fa fa-user"></i> <span data-i18n="raas_in.label.user"></span></label>
+    <select type="text" id="node-input-user">
+    </select>
+  </div>
+  <div class="form-row input-points-row">
+    <label for="node-input-points"><i class="fa fa-tag"></i> <span data-i18n="raas_in.label.points"></span></label>
+    <input type="number" id="node-input-points" data-i18n="[placeholder]raas_in.placeholder.points">
+  </div>
+  <hr />
+  <div class="form-row">
+    <label for="node-input-caller"><i class="fa fa-user"></i> <span data-i18n="raas_in.label.caller"></span></label>
+    <select type="text" id="node-input-caller">
+    </select>
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="raas_in.label.name"></span></label>
+    <input type="text" id="node-input-name" data-i18n="[placeholder]raas_in.placeholder.name">
+  </div>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('raas in', {
+    category: 'storage-input',
+    color: "#fff",
+    defaults: {
+      raas: { type: 'raas', required: true },
+      operation: { value: 'issuance' },
+      owner: { value: '' },
+      store: { value: '' },
+      user: { value: '' },
+      points: { value: 0 },
+      caller: { value: '' },
+      name: { value: '' }
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: 'arrow-in.svg',
+    label: function () {
+      return this.name || 'raas';
+    },
+    labelStyle: function () {
+      return this.name ? 'node_label_italic' : '';
+    },
+  	oneditprepare: function() {
+      raasNode = RED.nodes.node(this.id);
+      $("#connect-tips").text("").hide();
+
+      window.raasNodeIntervalId = window.setTimeout(pollAccountAddress, 4000);
+
+      var ownerel = $(".input-owner-row"),
+          storeel = $(".input-store-row"),
+          userel = $(".input-user-row"),
+          pointsel = $(".input-points-row");
+      $("#node-input-operation").change(function() {
+        var id = $("#node-input-operation option:selected").val();
+        ownerel.hide();
+        storeel.hide();
+        userel.hide();
+        pointsel.hide();
+        if (id != raasNode.operation) {
+          $("#node-input-owner").val("");
+          $("#node-input-store").val("");
+          $("#node-input-user").val("");
+          $("#node-input-points").val(0);
+        }
+        if (id == "issuance") {
+          pointsel.show();
+        } else if (id == "authority") {
+          storeel.show();
+        } else if (id == "givepoints") {
+          storeel.show();
+          userel.show();
+          pointsel.show();
+        } else if (id == "spendpoints") {
+          storeel.show();
+          userel.show();
+          pointsel.show();
+        } else if (id == "ownerpoints") {
+          //
+        } else if (id == "storepoints") {
+          storeel.show();
+        } else if (id == "stupoints") {
+          storeel.show();
+          userel.show();
+        } else if (id == "userpoints") {
+          userel.show();
+        }
+      });
+    },
+    oneditsave: function () {
+      if (window.raasNodeIntervalId) {
+        window.clearTimeout(window.raasNodeIntervalId);
+        delete window.raasNodeIntervalId;
+      }
+    }
+  });
+
+  var raasNode;
+
+  function updateAccountList(lists) {
+    var ownerlist = $("#node-input-owner"),
+        storelist = $("#node-input-store"),
+        userlist = $("#node-input-user"),
+        callerlist = $("#node-input-caller");
+
+    ownerlist.children("option").remove();
+    ownerlist.append('<option value=""> == select Owner == </option>');
+    storelist.children("option").remove();
+    storelist.append('<option value=""> == select Store == </option>');
+    userlist.children("option").remove();
+    userlist.append('<option value=""> == select User == </option>');
+    callerlist.children("option").remove();
+    callerlist.append('<option value=""> == select Caller == </option>');
+
+    $.each(lists.data, function (i, opt) {
+      ownerlist.append(
+        '<option value="' + opt.value + '">' + opt.text + "</option>"
+      );
+      storelist.append(
+        '<option value="' + opt.value + '">' + opt.text + "</option>"
+      );
+      userlist.append(
+        '<option value="' + opt.value + '">' + opt.text + "</option>"
+      );
+      callerlist.append(
+        '<option value="' + opt.value + '">' + opt.text + "</option>"
+      );
+    });
+
+    ownerlist.val(raasNode.owner);
+    storelist.val(raasNode.store);
+    userlist.val(raasNode.user);
+    callerlist.val(raasNode.caller);
+  }
+
+  function pollAccountAddress() {
+console.log("pollAccountAddress ===");
+    var configid = $("#node-input-raas").val();
+    configid = configid && configid.replace("_ADD_", "");
+    var credentailId = null,
+        param = "";
+
+    credentailId = raasNode.raas || configid;
+
+    if (credentailId) {
+      var configNode = RED.nodes.node(credentailId);
+
+      if (configNode.credentials) param += "&wsUrl=" + configNode.credentials.wsUrl;;
+
+      $.getJSON("raas-node/get-accounts?id=" + raasNode.id + "&credentials=" + credentailId + param,
+        function (data) {
+console.log(data);
+          if (data) {
+            if (data.error) {
+              $("#connect-tips").text(data.error).show();
+            }
+            updateAccountList(data);
+            delete window.raasNodeIntervalId;
+          } else {
+            window.raasNodeIntervalId = window.setTimeout(pollAccountAddress, 4000);
+          }
+        });
+    } else {
+      window.raasNodeIntervalId = window.setTimeout(pollAccountAddress, 4000);
+    }
+  }
+</script>

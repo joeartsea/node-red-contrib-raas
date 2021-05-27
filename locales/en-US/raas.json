@@ -1,0 +1,36 @@
+{
+  "raas" : {
+    "label" : {
+      "wsUrl" : "WS Provider URL",
+      "contractAddr" : "Contract Address",
+      "name" : "Name"
+    },
+    "placeholder" : {
+      "name" : "Name"
+    }
+  },
+  "raas_in" : {
+    "label" : {
+      "operation" : "Operation",
+      "owner" : "Owner",
+      "store" : "Store",
+      "user" : "User",
+      "points": "Points",
+      "caller" : "Contract Caller",
+      "name" : "Name"
+    },
+    "placeholder" : {
+      "name" : "Name"
+    },
+    "operation": {
+      "issuance": "Issuance",
+      "authority": "Authority",
+      "givepoints": "Give Points",
+      "spendpoints": "Spend Points",
+      "ownerpoints": "Get Owner Points",
+      "storepoints": "Get Store Points",
+      "stupoints": "Get Store/User Points",
+      "userpoints": "Get User Points"
+    }
+  }
+}

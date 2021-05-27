@@ -1,0 +1,87 @@
+<!--
+  Copyright 2018 Atsushi Kojo.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type="text/x-red" data-template-name="raas-admin">
+  <div class="form-row">
+    <label for="node-input-raas"><i class="fa fa-user"></i> API </label>
+    <input type="text" id="node-input-raas">
+  </div>
+  <div class="form-row">
+    <label for="node-input-operation"><i class="fa fa-wrench"></i> <span data-i18n="raas_admin.label.operation"></span></label>
+    <select type="text" id="node-input-operation">
+      <option value="save" data-i18n="raas_admin.operation.save"></option>
+      <option value="forget" data-i18n="raas_admin.operation.forget"></option>
+    </select>
+  </div>
+  <div class="form-row input-contractname-row">
+    <label for="node-input-contractname"><i class="fa fa-tag"></i> <span data-i18n="raas_admin.label.contractname"></span></label>
+    <input type="text" id="node-input-contractname" data-i18n="[placeholder]raas_admin.placeholder.contractname">
+  </div>
+  <div class="form-row input-abifile-row">
+    <label for="node-input-abifile"><i class="fa fa-file"></i> <span data-i18n="raas_admin.label.abifile"></span></label>
+    <input type="text" id="node-input-abifile" data-i18n="[placeholder]raas_admin.placeholder.abifile">
+  </div>
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="raas_admin.label.name"></span></label>
+    <input type="text" id="node-input-name" data-i18n="[placeholder]raas_admin.placeholder.name">
+  </div>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('raas-admin', {
+    category: 'storage-input',
+    color: "#fff",
+    defaults: {
+      raas: { type: 'raas', required: true },
+      operation: { value: 'save' },
+      contractname: { value: '' },
+      abifile: { value: '' },
+      name: { value: '' }
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: 'arrow-in.svg',
+    label: function () {
+      return this.name || 'raas-admin';
+    },
+    labelStyle: function () {
+      return this.name ? 'node_label_italic' : '';
+    },
+  	oneditprepare: function() {
+      raasAdminNode = RED.nodes.node(this.id);
+
+      var cnameel = $(".input-contractname-row"),
+          abiel = $(".input-abifile-row");
+      $("#node-input-operation").change(function() {
+        var id = $("#node-input-operation option:selected").val();
+        if (id != raasAdminNode.operation) {
+          $("#node-input-contractname").val("");
+          $("#node-input-abifile").val("");
+        }
+        if (id == "save") {
+          cnameel.show();
+          abiel.show();
+        } else {
+          cnameel.hide();
+          abiel.hide();
+        }
+      });
+    }
+  });
+
+  var raasAdminNode;
+
+</script>

@@ -1,0 +1,19 @@
+{
+  "raas_admin": {
+    "label" : {
+      "operation" : "Operation",
+      "contractname" : "Contract Name",
+      "abifile": "ABI File",
+      "name" : "Name"
+    },
+    "placeholder" : {
+      "contractname" : "A name for the instantiated contract",
+      "abifile" : "ABI file name",
+      "name" : "Name"
+    },
+    "operation": {
+      "save": "Save",
+      "forget": "Forget"
+    }
+  }
+}

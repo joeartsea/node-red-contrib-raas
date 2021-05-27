@@ -1,0 +1,36 @@
+{
+  "raas" : {
+    "label" : {
+      "wsUrl" : "WS Provider URL",
+      "contractAddr" : "Contract Address",
+      "name" : "名前"
+    },
+    "placeholder" : {
+      "name" : "名前"
+    }
+  },
+  "raas_in" : {
+    "label" : {
+      "operation" : "Operation",
+      "owner" : "オーナー",
+      "store" : "店舗",
+      "user" : "ユーザ",
+      "points": "ポイント",
+      "caller" : "Contract Caller",
+      "name" : "名前"
+    },
+    "placeholder" : {
+      "name" : "名前"
+    },
+    "operation": {
+      "issuance": "ポイント発行",
+      "authority": "権限付与",
+      "givepoints": "ポイント付与",
+      "spendpoints": "ポイント利用",
+      "ownerpoints": "オーナーポイント確認",
+      "storepoints": "店舗ポイント確認",
+      "stupoints": "店舗/ユーザポイント確認",
+      "userpoints": "ユーザポイント確認"
+    }
+  }
+}

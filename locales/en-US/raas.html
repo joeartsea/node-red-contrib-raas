@@ -1,0 +1,76 @@
+<script type="text/x-red" data-help-name="raas">
+  <p>Set the connection information for Substrate Smart Contracts.</p>
+  <p></p>
+  <p><code>WS Provider URL</code> sets the endpoint of the local node to connect to.</p>
+  <p><code>Contract Address</code> sets the contract address.</p>
+  <p><code>Name</code> sets any name.</p>
+</script>
+
+<script type="text/x-red" data-help-name="raas in">
+  <p>Use the Polkadot API to perform the following process selected in <code>Operation</code>.</p>
+  <ul>
+    <li>Issuance</li>
+    <li>Authority</li>
+    <li>Give Points</li>
+    <li>Spend Points</li>
+    <li>Get Owner Points</li>
+    <li>Get Store Points</li>
+    <li>Get Store/User Points</li>
+    <li>Get User Points</li>
+  </ul>
+
+  <h3>Outputs</h3>
+    <dl class="message-properties">
+      <dt>payload <span class="property-type">string</span></dt>
+      <dd>Outputs the execution result of the selected process.</dd>
+    </dl>
+
+  <h3>Details</h3>
+
+  <h4>Issuance</h4>
+    <p>Points will be issued.</p>
+    <p>Enter the number of points to be issued to <code>Points</code>.</p>
+    <p>Output the execution result.</p>
+
+  <h4>Authority</h4>
+    <p>Grant the selected store the authority to issue points.</p>
+    <p>Select the account to which you want to grant permissions to <code>Store</code>.</p>
+    <p>Output the execution result.</p>
+
+  <h4>Give Points</h4>
+    <p>The selected store will give points to the user.</p>
+    <p>Select the store account to which you want to give points to <code>Store</code>.</p>
+    <p>Select the user account to which you want to grant points to <code>User</code>.</p>
+    <p>Enter the number of points to be awarded to <code>Points</code>.</p>
+    <p>Output the execution result.</p>
+
+  <h4>Spend Points</h4>
+    <p>Use the user's points at the selected store.</p>
+    <p>Select the store account you want to use the points for in <code>Store</code>.</p>
+    <p>Select the user account you want to use the points for in <code>User</code>.</p>
+    <p>Enter the number of points you want to use in <code>Points</code>.</p>
+    <p>Output the execution result.</p>
+
+  <h4>Get Owner Points</h4>
+    <p>Get the number of points you have issued.</p>
+    <p>Output the execution result.</p>
+
+  <h4>Get Store Points</h4>
+    <p>Get the number of points awarded by the selected store.</p>
+    <p>Select the store account you want to check the number of points for in <code>Store</code>.</p>
+    <p>Output the execution result.</p>
+
+  <h4>Get Store/User Points</h4>
+    <p>Get the number of points given by the selected store to a specific user.</p>
+    <p>Select the store account you want to check the number of points for in <code>Store</code>.</p>
+    <p>Select the user account you want to check the number of points in <code>User</code>.</p>
+    <p>Output the execution result.</p>
+
+  <h4>Get User Points</h4>
+    <p>Get the number of points held by the selected user.</p>
+    <p>Select the user account you want to check the number of points in <code>User</code>.</p>
+    <p>Output the execution result.</p>
+
+  <p>Select the account that will execute the contract in <code>Contract Caller</code>.</p>
+
+</script>
